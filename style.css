@@ -28,7 +28,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --blush: #1D1422;
+    --blush: #8c44b3;
     --blush-2: #2A1C2E;
     --ink: #F8EAF1;
     --ink-soft: #DCC6D2;
