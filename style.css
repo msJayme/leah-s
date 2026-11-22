@@ -268,3 +268,164 @@
   max-height:100%;
   border-radius:16px;
 }
+
+
+/* ===== Dreamy fantasy layer — LIGHT MODE ONLY =====
+   Load this AFTER style.css. Everything fades out in dark mode
+   because --dream is 1 in light mode and 0 in dark mode. */
+
+:root{
+  --dream:1;
+  --swash:linear-gradient(90deg,#F49CC0,#C6B4E6,#FFC9B0,#F49CC0);
+  --btn-grad:linear-gradient(120deg,#D0568B,#D96AA7,#B76BC9);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--dream:0;--swash:var(--pink);--btn-grad:none;}
+}
+:root[data-theme="dark"]{--dream:0;--swash:var(--pink);--btn-grad:none;}
+
+/* Soft pastel clouds drifting behind everything */
+body::before{
+  content:"";
+  position:fixed; inset:-5%;
+  z-index:-1; pointer-events:none;
+  opacity:var(--dream);
+  transition:opacity .6s ease;
+  background:
+    radial-gradient(520px 420px at 8% 12%, rgba(244,156,192,.32), transparent 70%),
+    radial-gradient(620px 480px at 92% 8%, rgba(198,180,230,.36), transparent 70%),
+    radial-gradient(560px 460px at 86% 88%, rgba(255,201,176,.32), transparent 70%),
+    radial-gradient(520px 420px at 6% 86%, rgba(198,180,230,.28), transparent 70%),
+    radial-gradient(380px 300px at 50% 45%, rgba(251,211,228,.35), transparent 70%);
+  animation:dream-drift 20s ease-in-out infinite alternate;
+}
+@keyframes dream-drift{
+  to{transform:scale(1.08) translate(-1.5%,1.2%);}
+}
+
+/* Twinkling stars (created by sparkles.js) */
+.dream-layer{
+  position:fixed; inset:0;
+  z-index:-1; pointer-events:none; overflow:hidden;
+  opacity:var(--dream);
+  transition:opacity .6s ease;
+}
+.sparkle{
+  position:absolute;
+  font-size:var(--s,14px);
+  line-height:1;
+  text-shadow:0 0 10px currentColor, 0 0 22px currentColor;
+  animation:twinkle var(--t,4s) ease-in-out var(--d,0s) infinite;
+}
+@keyframes twinkle{
+  0%,100%{opacity:.12; transform:scale(.55) rotate(0deg);}
+  50%{opacity:.95; transform:scale(1.15) rotate(30deg);}
+}
+
+/* Cursor sparkle trail */
+.trail-layer{
+  position:fixed; inset:0;
+  z-index:200; pointer-events:none; overflow:hidden;
+  opacity:var(--dream);
+}
+.trail{
+  position:absolute;
+  font-size:14px; line-height:1;
+  text-shadow:0 0 8px currentColor;
+  animation:trail .9s ease-out forwards;
+}
+@keyframes trail{
+  0%{opacity:1; transform:translate(-50%,-50%) scale(1);}
+  100%{opacity:0; transform:translate(calc(-50% + var(--dx,0px)),calc(-50% + 38px)) scale(.3) rotate(140deg);}
+}
+
+/* Sparkle dividers between sections */
+section{position:relative;}
+section:not(.hero)::before{
+  content:"✦  ✧  ✦";
+  position:absolute; top:0; left:50%;
+  transform:translate(-50%,-50%);
+  padding:2px 16px;
+  border-radius:999px;
+  font-size:.8rem; letter-spacing:.35em; white-space:nowrap;
+  color:var(--pink-ink);
+  background:color-mix(in srgb, var(--blush) 75%, transparent);
+  backdrop-filter:blur(4px);
+  opacity:var(--dream);
+  pointer-events:none;
+}
+
+/* Name underline becomes a shimmering rainbow swash */
+.hero h1 .last::after{
+  background:var(--swash);
+  background-size:200% 100%;
+  animation:
+    swash 0.7s cubic-bezier(.5,.1,.2,1) 0.5s forwards,
+    dream-shimmer 6s linear 1.3s infinite;
+}
+@keyframes dream-shimmer{
+  to{background-position:200% 0;}
+}
+
+/* Glow around the profile photo + corner stars */
+.photo{
+  box-shadow:
+    0 24px 50px -24px color-mix(in srgb, var(--pink-ink) 45%, transparent),
+    0 0 0 6px color-mix(in srgb, var(--pink) calc(var(--dream) * 35%), transparent),
+    0 0 70px color-mix(in srgb, var(--lav) calc(var(--dream) * 60%), transparent);
+}
+.photo-frame::before,
+.photo-frame::after{
+  position:absolute; z-index:2; pointer-events:none;
+  color:var(--pink-ink);
+  text-shadow:0 0 12px var(--pink);
+  animation:twinkle-soft 3.2s ease-in-out infinite;
+}
+.photo-frame::before{content:"✦"; top:-20px; left:-16px; font-size:2.1rem;}
+.photo-frame::after{content:"✧"; bottom:-14px; right:-12px; font-size:1.7rem; animation-delay:1.4s;}
+@keyframes twinkle-soft{
+  0%,100%{opacity:calc(var(--dream) * .25); transform:scale(.7) rotate(0deg);}
+  50%{opacity:calc(var(--dream) * 1); transform:scale(1.15) rotate(25deg);}
+}
+
+/* Cards, chips and skills: gentle pastel glow */
+.skill,.card,.chip{
+  box-shadow:0 10px 26px -18px color-mix(in srgb, var(--pink-ink) calc(var(--dream) * 55%), transparent);
+}
+.skill:hover,.card:hover{
+  box-shadow:
+    0 16px 36px -14px color-mix(in srgb, var(--pink) calc(var(--dream) * 75%), transparent),
+    0 0 0 4px color-mix(in srgb, var(--lav) calc(var(--dream) * 28%), transparent);
+}
+
+/* Shimmery gradient button */
+.btn:not(.ghost){
+  background-image:var(--btn-grad);
+  background-size:200% 100%;
+  transition:transform .15s, box-shadow .2s, background-position .5s;
+}
+.btn:not(.ghost):hover{background-position:100% 0;}
+
+/* Gallery: dreamy glow instead of heavy black shadow */
+.gallery figure{
+  box-shadow:0 10px 26px -12px color-mix(in srgb, var(--pink-ink) calc(var(--dream) * 55%), rgba(0,0,0,.35));
+}
+.gallery figure:hover{
+  box-shadow:
+    0 18px 36px -12px color-mix(in srgb, var(--pink) calc(var(--dream) * 80%), rgba(0,0,0,.45)),
+    0 0 0 4px color-mix(in srgb, var(--lav) calc(var(--dream) * 40%), transparent);
+}
+
+/* Respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce){
+  body::before,
+  .sparkle,
+  .photo-frame::before,
+  .photo-frame::after{animation:none;}
+  .sparkle{opacity:.5;}
+  .trail-layer{display:none;}
+  .hero h1 .last::after{
+    transform:scaleX(1);
+    animation:none;
+  }
+}
